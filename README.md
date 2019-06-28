@@ -8,7 +8,8 @@ Fashion-MNIST is a dataset of Zalando's article images—consisting of a trainin
 ## Data Loading
 We separate the data become Training set and Testing set based on source
 
-https://github.com/zalandoresearch/fashion-mnist
+[Fashion-MNIST Dataset](https://github.com/zalandoresearch/fashion-mnist)
+
 
 For training purpose, the dataset is augmented with several transform
 * Resize
@@ -24,7 +25,12 @@ Make image from grayscale 1 channel to 3 channel
 
 ### Initialization
 
-Hyperparameter
+#### Hyperparameter Tuning
+* Learning Rate
+* Batch Size
+* Number of Epoch
+
+#### Implementation
 * Criterion
 
 ```python
@@ -42,19 +48,19 @@ optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
 scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.2)
 ```
 
-### Process
-
-
 ## Testing Result
 
 | CNN</br>Architecture | Model </br> size (MB)     | Best  </br> Accuracy (%) |  
 |------------- |:-------------:|:-------------:    |
-| VGG-16       | 1030          |92                 |  
-| ResNet-18    | 89.25         |95                 | 
-| ResNet-50    | 30            |94.31              | 
+| VGG-16       | 1030          |93.25                 |  
+| ResNet-18    | 89.25         |94.17                 | 
+| ResNet-50    | 30            |93.11              | 
 | ResNet-152   | 445           |95.39              | 
 | DenseNet-121 |  54           | 95.52             |
-    
+| DenseNet-161 |  203.24         95.42             |
+| DenseNet-201 |  139.4         | X             |
+ 
+ 
 ## Optimize Result
 
 ### Test Time Augmentation
@@ -67,9 +73,10 @@ Augment the data for testing process. There are two types data, first is origina
 For Ensemble the model I use _Bagging_ method, it means we only process all output from several models
 
 <p align="center">
-<img src="https://latex.codecogs.com/svg.latex?\Large&space;output=w_1.output_1+w_2.output_2" />
+<img src="https://latex.codecogs.com/svg.latex?\Large&space;output=w_1.output_1+w_2.output_2+...+w_n.output_n" />
 </p>
 
+Here the result
 * Ensemble ResNet-152 + DenseNet-121
     * w<sub>1</sub> = 0.5, w<sub>2</sub> = 0.5
     
@@ -79,6 +86,31 @@ For Ensemble the model I use _Bagging_ method, it means we only process all outp
     
       Testing accuracy result is Accuracy 95.80 %
 
+* Ensemble DenseNet-121 + DenseNet-161
+    * w<sub>1</sub> = 0.5, w<sub>2</sub> = 0.5
+      
+      Testing accuracy result is 95.95%
+      
+    * w<sub>1</sub> = 0.6, w<sub>2</sub> = 0.4
+      
+      Testing accuracy result is Accuracy 96.01 %
+      
+    * w<sub>1</sub> = 0.4, w<sub>2</sub> = 0.6
+    
+      Testing accuracy result is Accuracy 95.86 %      
+      
+    * w<sub>1</sub> = 0.7, w<sub>2</sub> = 0.3
+    
+      Testing accuracy result is Accuracy 95.95 %    
+      
+ * Ensemble DenseNet-121 + DenseNet-161 + ResNet-152    
+   * w<sub>1</sub> = 0.33, w<sub>2</sub> = 0.33, w<sub>3</sub> = 0.33 (mean)  
+   
+     Testing accuracy result is 95.71%
+     
+   * w<sub>1</sub> = 0.4, w<sub>2</sub> = 0.3, w<sub>3</sub> = 0.3  
+   
+     Testing accuracy result is 95.71%
 
 # Conclusion
 
@@ -90,4 +122,4 @@ For Ensemble the model I use _Bagging_ method, it means we only process all outp
   * Data Augmentation (Resizing, RandomHorizontalFlip, RandomRotation)
   * Ensemble Method
   
-* Efficient
+* Transfer learning speed up training process and increase testing accuracy
